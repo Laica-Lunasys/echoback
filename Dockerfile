@@ -15,4 +15,4 @@ COPY --from=build /go/src/github.com/Laica-Lunasys/echoback /app/
 
 RUN apk add --no-cache ca-certificates
 
-ENTRYPOINT ["exec", "/app/echoback"]
+ENTRYPOINT ["/app/echoback"]
