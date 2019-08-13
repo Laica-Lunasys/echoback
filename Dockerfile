@@ -13,6 +13,4 @@ WORKDIR /app
 EXPOSE 8080
 COPY --from=build /go/src/github.com/Laica-Lunasys/echoback /app/
 
-RUN apk add --no-cache ca-certificates
-
 ENTRYPOINT ["/app/echoback"]
