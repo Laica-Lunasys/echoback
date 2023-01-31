@@ -1,10 +1,14 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"text/template"
+
+	"github.com/k0kubun/pp"
 )
 
 type Page struct {
@@ -31,6 +35,26 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func handleHeaders(w http.ResponseWriter, r *http.Request) {
+    headers := r.Header
+
+    fmt.Println("------------")
+    pp.Println(headers)
+    fmt.Println("------------")
+
+    w.Header().Set("Content-Type", "application/json")
+
+    res, err := json.Marshal(headers)
+    if err != nil {
+        panic(err)
+    }
+
+    _, err = io.WriteString(w, string(res))
+    if err != nil {
+        panic(err)
+    }
+}
+
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -38,6 +62,7 @@ func main() {
 	}
 
 	http.HandleFunc("/", handleIndex)
+    http.HandleFunc("/headers", handleHeaders)
 
 	fmt.Printf(":: Echoback listening at %s\n", port)
 	err := http.ListenAndServe(fmt.Sprintf(":%s", port), nil)
